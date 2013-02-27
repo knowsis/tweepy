@@ -144,16 +144,19 @@ def bind_api(**config):
 
                 # Exit request loop if non-retry error code
                 if self.retry_errors:
-                    if resp.status not in self.retry_errors: break
+                    if resp.status not in self.retry_errors:
+                        break
                 else:
-                    if resp.status == 200: break
+                    if resp.status == 200:
+                        break
 
                 # Sleep before retrying request again
                 time.sleep(self.retry_delay)
                 retries_performed += 1
 
             # If an error was returned, throw an exception
-            self.api.last_response = resp
+            self.api.update_last_response(resp)
+
             if resp.status != 200:
                 try:
                     error_msg = self.api.parser.parse_error(resp.read())
@@ -172,12 +175,10 @@ def bind_api(**config):
 
             return result
 
-
     def _call(api, *args, **kargs):
 
         method = APIMethod(api, args, kargs)
         return method.execute()
-
 
     # Set pagination mode
     if 'cursor' in APIMethod.allowed_param:
@@ -186,4 +187,3 @@ def bind_api(**config):
         _call.pagination_mode = 'page'
 
     return _call
-
