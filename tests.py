@@ -10,11 +10,11 @@ from tweepy import (API, OAuthHandler, Friendship, Cursor,
 
 """Configurations"""
 # Must supply twitter account credentials for tests
-username = os.environ.get('TWITTER_USERNAME', '')
-oauth_consumer_key = os.environ.get('CONSUMER_KEY', '')
-oauth_consumer_secret = os.environ.get('CONSUMER_SECRET', '')
-oauth_token = os.environ.get('ACCESS_KEY', '')
-oauth_token_secret = os.environ.get('ACCESS_SECRET', '')
+username = os.environ.get('TWITTER_USERNAME', 'TweepyTestBuild')
+oauth_consumer_key = os.environ.get('CONSUMER_KEY', 'Zv25FL2pEupcjE3klaNlg')
+oauth_consumer_secret = os.environ.get('CONSUMER_SECRET', 'x634Dr3Bwfaouwi7VrZBcrztDVIDPoJKS9raXYTs')
+oauth_token = os.environ.get('ACCESS_KEY', '1224796500-yq0bTMlyqGcbp1CFrKixzH4NjcG0xJHM7FV2cTz')
+oauth_token_secret = os.environ.get('ACCESS_SECRET', 'CZpxPr9OeuVVyMHhM5P1lzKFlGEjJy2GXzhHQojY')
 
 test_tweet_id = '266367358078169089'
 
