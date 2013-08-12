@@ -142,30 +142,41 @@ class ItemIterator(BaseIterator):
         self.page_iterator = page_iterator
         self.limit = 0
         self.current_page = None
-        self.page_index = -1
-        self.count = 0
+        self.iterated_in_current_page = -1
+        self.total_iterated = 0
+        self.requested_page_size = page_iterator.kargs.get('count', 15)
+
+    def reached_end_of_page(self):
+        return self.current_page is None or self.iterated_in_current_page == len(self.current_page) - 1
+
+    def reached_end_of_last_page(self):
+        # len(last page) will be less than requested page size eg. 3 results when page size = 15
+        # if we hit the end of last page then stop iterating
+        return self.current_page and self.iterated_in_current_page == len(self.current_page) - 1 and len(
+            self.current_page) < self.requested_page_size
 
     def next(self):
-        if self.limit > 0 and self.count == self.limit:
+        if self.limit > 0 and self.total_iterated == self.limit:
             raise StopIteration
-        if self.current_page is None or self.page_index == len(self.current_page) - 1:
-            # Reached end of current page, get the next page...
+        if self.reached_end_of_last_page():
+            raise StopIteration
+        if self.reached_end_of_page():
             self.current_page = self.page_iterator.next()
-            self.page_index = -1
-        self.page_index += 1
-        self.count += 1
-        return self.current_page[self.page_index]
+            self.iterated_in_current_page = -1  # jump back to index 0
+        self.iterated_in_current_page += 1
+        self.total_iterated += 1
+        return self.current_page[self.iterated_in_current_page]
 
     def prev(self):
         if self.current_page is None:
             raise TweepError('Can not go back more, at first page')
-        if self.page_index == 0:
+        if self.iterated_in_current_page == 0:
             # At the beginning of the current page, move to next...
             self.current_page = self.page_iterator.prev()
-            self.page_index = len(self.current_page)
-            if self.page_index == 0:
+            self.iterated_in_current_page = len(self.current_page)
+            if self.iterated_in_current_page == 0:
                 raise TweepError('No more items')
-        self.page_index -= 1
-        self.count -= 1
-        return self.current_page[self.page_index]
+        self.iterated_in_current_page -= 1
+        self.total_iterated -= 1
+        return self.current_page[self.iterated_in_current_page]
 
