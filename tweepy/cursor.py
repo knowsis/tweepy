@@ -94,11 +94,11 @@ class IdIterator(BaseIterator):
 
         # max_id is inclusive so decrement by one
         # to avoid requesting duplicate items.
-        max_id = self.since_id - 1 if self.max_id else None
+        max_id = self.max_id - 1 if self.max_id else None
         data = self.method(max_id=max_id, *self.args, **self.kargs)
         if len(data) == 0:
             raise StopIteration
-        self.max_id = data.max_id
+        self.max_id = min([t.id for t in data])
         self.since_id = data.since_id
         self.count += 1
         return data
