@@ -187,6 +187,8 @@ def bind_api(**config):
                 time.sleep(self.retry_delay)
                 retries_performed += 1
 
+            api_limits.from_headers(self.headers_to_dict(resp.getheaders()))
+            
             # If an error was returned, throw an exception
             self.api.last_response = resp
             if resp.status != 200:
@@ -205,7 +207,7 @@ def bind_api(**config):
                 except Exception, e:
                     raise TweepError('Failed to decompress data: %s' % e)
 
-            api_limits.from_headers(self.headers_to_dict(resp.getheaders()))
+            
             result = self.api.parser.parse(self, body)
 
             conn.close()
