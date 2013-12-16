@@ -3,6 +3,7 @@
 # See LICENSE for details.
 
 import httplib
+import os
 import urllib
 import time
 import re
@@ -14,6 +15,8 @@ from tweepy.utils import convert_to_utf8_str
 from tweepy.models import Model
 
 re_path_template = re.compile('{\w+}')
+
+knowsis_environment = os.getenv('KNOWSIS_ENVIRONMENT', 'DEBUG')
 
 
 def bind_api(**config):
@@ -158,6 +161,9 @@ def bind_api(**config):
                     conn = httplib.HTTPSConnection(self.host, timeout=self.api.timeout)
                 else:
                     conn = httplib.HTTPConnection(self.host, timeout=self.api.timeout)
+
+                if knowsis_environment in ['DEBUG', 'TEST']:
+                    conn.set_debuglevel(99)
 
                 # Apply authentication
                 if self.api.auth:
