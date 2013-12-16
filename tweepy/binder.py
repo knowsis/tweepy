@@ -3,6 +3,7 @@
 # See LICENSE for details.
 
 import httplib
+import logging
 import os
 import urllib
 import time
@@ -16,7 +17,7 @@ from tweepy.models import Model
 
 re_path_template = re.compile('{\w+}')
 
-knowsis_environment = os.getenv('KNOWSIS_ENVIRONMENT', 'DEBUG')
+knowsis_logging_level = int(os.getenv('KNOWSIS_LOGGING_LEVEL', logging.ERROR))
 
 
 def bind_api(**config):
@@ -162,7 +163,7 @@ def bind_api(**config):
                 else:
                     conn = httplib.HTTPConnection(self.host, timeout=self.api.timeout)
 
-                if knowsis_environment in ['DEBUG', 'TEST']:
+                if knowsis_logging_level <= logging.DEBUG:
                     conn.set_debuglevel(99)
 
                 # Apply authentication
@@ -178,10 +179,14 @@ def bind_api(**config):
 
                 # Execute request
                 try:
+                    if knowsis_logging_level <= logging.DEBUG:
+                        logging.debug('sending request')
                     conn.request(self.method, url, headers=self.headers, body=self.post_data)
+                    if knowsis_logging_level <= logging.DEBUG:
+                        logging.debug('getting response')
                     resp = conn.getresponse()
                 except Exception, e:
-                    raise TweepError('Failed to send request: %s' % e)
+                    raise TweepError('Failed to send request: {0} - {1}'.format(type(e), e))
 
                 # Exit request loop if non-retry error code
                 if self.retry_errors:
