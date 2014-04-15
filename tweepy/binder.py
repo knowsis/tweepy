@@ -17,8 +17,6 @@ from tweepy.models import Model
 
 re_path_template = re.compile('{\w+}')
 
-knowsis_logging_level = int(os.getenv('KNOWSIS_LOGGING_LEVEL', logging.ERROR))
-
 
 def bind_api(**config):
 
@@ -163,9 +161,6 @@ def bind_api(**config):
                 else:
                     conn = httplib.HTTPConnection(self.host, timeout=self.api.timeout)
 
-                if knowsis_logging_level <= logging.DEBUG:
-                    conn.set_debuglevel(99)
-
                 # Apply authentication
                 if self.api.auth:
                     self.api.auth.apply_auth(
@@ -179,11 +174,7 @@ def bind_api(**config):
 
                 # Execute request
                 try:
-                    if knowsis_logging_level <= logging.DEBUG:
-                        logging.debug('sending request')
                     conn.request(self.method, url, headers=self.headers, body=self.post_data)
-                    if knowsis_logging_level <= logging.DEBUG:
-                        logging.debug('getting response')
                     resp = conn.getresponse()
                 except Exception, e:
                     raise TweepError('Failed to send request: {0} - {1}'.format(type(e), e))
