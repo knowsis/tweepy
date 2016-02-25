@@ -65,6 +65,7 @@ class Status(Model):
     @classmethod
     def parse(cls, api, json):
         status = cls(api)
+        setattr(status, '_json', json)
         for k, v in json.items():
             if k == 'user':
                 user_model = getattr(api.parser.model_factory, 'user')
