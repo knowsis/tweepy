@@ -2,14 +2,14 @@
 # Copyright 2009-2010 Joshua Roesslein
 # See LICENSE for details.
 
-import httplib
-import logging
-import os
 import urllib
 import time
 import re
-from StringIO import StringIO
 import gzip
+
+from six.moves import http_client as httplib
+from six.moves import cStringIO as StringIO
+
 
 from tweepy.error import TweepError
 from tweepy.utils import convert_to_utf8_str
@@ -176,7 +176,7 @@ def bind_api(**config):
                 try:
                     conn.request(self.method, url, headers=self.headers, body=self.post_data)
                     resp = conn.getresponse()
-                except Exception, e:
+                except Exception as e:
                     raise TweepError('Failed to send request: {0} - {1}'.format(type(e), e))
 
                 # Exit request loop if non-retry error code
@@ -206,9 +206,8 @@ def bind_api(**config):
                 try:
                     zipper = gzip.GzipFile(fileobj=StringIO(body))
                     body = zipper.read()
-                except Exception, e:
+                except Exception as e:
                     raise TweepError('Failed to decompress data: %s' % e)
-
             
             result = self.api.parser.parse(self, body)
 
