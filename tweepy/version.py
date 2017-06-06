@@ -1,1 +1,1 @@
-version = '2.1.8+knowsis'
+version = '2.2.0+knowsis'

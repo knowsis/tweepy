@@ -4,7 +4,7 @@
 import uuid
 
 from setuptools import setup, find_packages
-from tweepy import __version__
+from tweepy.version import version as __version__
 
 from pip.req import parse_requirements
 
