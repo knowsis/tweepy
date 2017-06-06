@@ -4,7 +4,6 @@
 import uuid
 
 from setuptools import setup, find_packages
-from tweepy.version import version as __version__
 
 from pip.req import parse_requirements
 
@@ -12,7 +11,7 @@ install_reqs = parse_requirements('requirements.txt', session=uuid.uuid1())
 reqs = [str(req.req) for req in install_reqs]
 
 setup(name="tweepy",
-      version=__version__,
+      version='2.2.0+knowsis',
       description="Twitter library for python",
       license="MIT",
       author="Joshua Roesslein",
@@ -20,5 +19,6 @@ setup(name="tweepy",
       url="http://github.com/tweepy/tweepy",
       install_requires=reqs,
       packages=find_packages(),
+      include_package_data=True,
       keywords="twitter library",
       zip_safe=True)
