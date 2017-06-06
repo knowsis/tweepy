@@ -5,7 +5,7 @@
 """
 Tweepy Twitter API library
 """
-__version__ = '2.1.8+knowsis'
+
 __author__ = 'Joshua Roesslein'
 __license__ = 'MIT'
 
@@ -16,7 +16,9 @@ from tweepy.cache import Cache, MemoryCache, FileCache
 from tweepy.auth import BasicAuthHandler, OAuthHandler
 from tweepy.streaming import Stream, StreamListener
 from tweepy.cursor import Cursor
+import tweepy.version
 
+__version__ = version.version
 # Global, unauthenticated instance of API
 api = API()
 
